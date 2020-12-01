@@ -2,12 +2,14 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.core.mail import send_mail
 from django.conf import settings
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import csrf_exempt,csrf_protect
 from weatherapp.models import userDetails
-
+import json
+from urllib.request import urlopen
 
 # Create your views here.
 
+lst=[]
 
 def home(request):
     return render(request, "homepage.html")
@@ -23,17 +25,54 @@ def savemail(request):
     return render(request, "thank.html")
 
 
+@csrf_exempt
+def displayWeather(request):
+    city = request.POST.get("city")
+    url = 'http://api.openweathermap.org/data/2.5/forecast?q='
+    url+= city
+    url+='&cnt=7&APPID=b7174ad2b2d6ef9d181c73572502ee83'
+    json_url = urlopen(url)
+    data = json.loads(json_url.read())
+    data1=''
+    for i in data['list']:
+        w={
+            'temp': 'Temperature:'+str(i['main']['temp']),
+            'mn' : 'Minimun temperature:' +str(i['main']['temp_min']),
+            'mx': 'Maximum temperature:' + str(i['main']['temp_max']),
+            'pressure':'Pressure:' + str(i['main']['pressure']),
+            'hum':'Humidity:' + str(i['main']['humidity']) ,
+            'desc':'Description:' + str(i['weather'][0]['description']),
+            'speed':'Speed of wind:' + str(i['wind']['speed']),
+            'icon':i['weather'][0]['icon'],
+            'date':'Date:' + str(i['dt_txt']),
+        }
+        
+        
+         
+        lst.append(w)
+
+    return render(request,'display.html',context={'lst':lst,'city':city})
+        
+
 # This is function for senting mail out - Commenting it out for a CronJOb - siva
-""" @csrf_exempt
+@csrf_exempt
 def sendmail(request):
     touser = request.POST.get("t")
-    sub = request.POST.get("s")
-    bod = request.POST.get("b")
+    sub = 'Weather alert'
+    bod = 'Hello sir/ madam,'
+    bod+='Here is to inform that you may have rain in the coming two days.'
+    bod+='So be alert and stay safe. Thanks for subscribing us!'
     efrom = settings.EMAIL_HOST_USER
     reclist = [
         touser,
     ]
-    send_mail(sub, bod, efrom, reclist)
     msg = "Mail Delivered"
+    for w in lst:
+        if w['desc']=='light rain' or w['desc']=='moderate rain':
+            send_mail(sub, bod, efrom, reclist)
+            msg='Mail Sent!'
+
+    
+    
     return HttpResponse(msg)
- """
+ 
