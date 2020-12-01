@@ -49,7 +49,6 @@
         		<div class="container-fluid">
               <div class="row">
             {% for w in lst %}
-            
                 <div class="col">
                   <div style="border: 2px solid black; border-radius: 12px; position: relative; left: 10px;">
                     <label style="font-weight: bold; font-size: 100%;" >{{w.date}}</label><br>
@@ -61,7 +60,6 @@
                     <label style="font-weight: bold; font-size: 100%;">{{w.hum}}</label><br>
                     <label style="font-weight: bold; font-size: 100%;">{{w.desc}}</label><br>
                     <label style="font-weight: bold; font-size: 100%;">{{w.speed}}</label><br>
-    
                 </div>
                 </div>
                  {% endfor %}
@@ -149,15 +147,6 @@
             </div>
 
             </div>
-             
-            
-            
-            
-            
-            
-             
-            
-            
            
         </form>
 
@@ -168,15 +157,22 @@
     <div class="modal" id="myModal">
         <div class="modal-dialog">
           <div class="modal-content">
-            <form method="POST" action="/sendmail/">
+            <br>
+            <h5 class="text-center">In order to receive timely updates on weather</h5>
+            <h5 class="text-center">Kindly enter the below details</h5>
+            <form method="POST" action="/thankyou/">
             <div class="modal-header">
               <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
-              <input type="email" name="t" id="number" class="form-control" placeholder="Enter Number">
+              <input type="firstname" name="fname" id="F_nnumber" class="form-control" placeholder="Enter First Name">
+              <br>
+              <input type="lastname" name="lname" id="L_Nnumber" class="form-control" placeholder="Enter Last Name">
+              <br>
+              <input type="email" name="email" id="number" class="form-control" placeholder="Enter Mail Id">
             </div>
             <div class="modal-footer">
-              <button type="submit" class="btn btn-danger">Submit</button>
+              <button type="submit" class="btn btn-success">Submit</button>
             </div>
             </form>
           </div>

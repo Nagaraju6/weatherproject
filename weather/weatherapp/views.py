@@ -9,7 +9,7 @@ from urllib.request import urlopen
 
 # Create your views here.
 
-lst=[]
+
 
 def home(request):
     return render(request, "homepage.html")
@@ -34,6 +34,7 @@ def displayWeather(request):
     json_url = urlopen(url)
     data = json.loads(json_url.read())
     data1=''
+    lst=[]
     for i in data['list']:
         w={
             'temp': 'Temperature:'+str(i['main']['temp']),
@@ -71,8 +72,5 @@ def sendmail(request):
         if w['desc']=='light rain' or w['desc']=='moderate rain':
             send_mail(sub, bod, efrom, reclist)
             msg='Mail Sent!'
-
-    
-    
     return HttpResponse(msg)
  
