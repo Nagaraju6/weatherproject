@@ -21,4 +21,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("home/", home),
     path("thankyou/", savemail),
+    path('displayWeather/',displayWeather),
+    path('sendmail/',sendmail)
+    
 ]
