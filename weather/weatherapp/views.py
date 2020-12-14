@@ -37,20 +37,22 @@ def displayWeather(request):
     lst=[]
     for i in data['list']:
         w={
-            'temp': 'Temperature:'+str(i['main']['temp']),
-            'mn' : 'Minimun temperature:' +str(i['main']['temp_min']),
-            'mx': 'Maximum temperature:' + str(i['main']['temp_max']),
-            'pressure':'Pressure:' + str(i['main']['pressure']),
-            'hum':'Humidity:' + str(i['main']['humidity']) ,
-            'desc':'Description:' + str(i['weather'][0]['description']),
-            'speed':'Speed of wind:' + str(i['wind']['speed']),
+            'temp':str(i['main']['temp']),
+            'mn' :str(i['main']['temp_min']),
+            'mx':str(i['main']['temp_max']),
+            'pressure':str(i['main']['pressure']),
+            'hum':str(i['main']['humidity']) ,
+            'desc':str(i['weather'][0]['description']),
+            'speed':str(i['wind']['speed']),
             'icon':i['weather'][0]['icon'],
-            'date':'Date:' + str(i['dt_txt']),
+            'date':str(i['dt_txt']),
         }
         
         
          
         lst.append(w)
+
+    request.session['l'] = lst
 
     return render(request,'display.html',context={'lst':lst,'city':city})
         
@@ -68,9 +70,13 @@ def sendmail(request):
         touser,
     ]
     msg = "Mail Delivered"
+    lst = request.session['l']
     for w in lst:
         if w['desc']=='light rain' or w['desc']=='moderate rain':
             send_mail(sub, bod, efrom, reclist)
             msg='Mail Sent!'
-    return HttpResponse(msg)
+
+    
+    
+    return render(request,'thank.html')
  
